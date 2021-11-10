@@ -2,7 +2,6 @@
 
 require "_main.php";
 
-
 $studentid = $_GET["sid"];
 $bookid = $_GET["bid"];
 
@@ -13,21 +12,49 @@ if (!isset($studentid) || !isset($bookid)){
     die(json_encode($res));
 }
 
+$year = date("Y")+543;
+$currentTime = date("d")."/".date("m")."/".$year;
+$deadline = date("d/m/Y", strtotime($currentTime. ' + 6 Days + 1 Month'));
+
+
+
+$targetDB = "`log`.`$year`";
+$oldyear = $year - 1;
+
 $conn = getDatabase();
 
-$re = $conn->query("SELECT 1 FROM `studentsborrow`.`$studentid`;");
-if($re->num_rows==0){
-    $conn->query("CREATE TABLE `studentsborrow`.`$studentid` (
-        `bookid` VARCHAR(45) NOT NULL,
-        `borrowtime` VARCHAR(45) NULL,
-        `returntime` VARCHAR(45) NULL,
-        `status` VARCHAR(45) NULL,
-        PRIMARY KEY (`bookid`));");
-    
+//Get book
+$re = $conn->query("SELECT * FROM `books`.`books` WHERE id = '$bookid'");
+if ($re->num_rows==0){
+    $res = new Response();
+    $res->code = 4;
+    $res->content = "Book not found.";
+    die(json_encode($res));
+}
+$row = $re->fetch_assoc();
+$bookname = $row["name"];
+$bookregisnum = $row["regisnum"];
+$bookcategory = $row["category"];
+
+//Get student
+$re = $conn->query("SELECT * FROM students.students WHERE id = '$studentid'");
+if ($re->num_rows==0){
+    $res = new Response();
+    $res->code = 3;
+    $res->content = "Student not found.";
+    die(json_encode($res));
+}
+$row = $re->fetch_assoc();
+$studentname = $row["name"];
+$studentclass = $row["class"];
+
+
+if($conn->query("SHOW TABLE LIKE $targetDB")){
+    $conn->query("CREATE TABLE `log`.`$year` LIKE `log`.`$oldyear`");
 }
 
-$time = time();
-$re = $conn->query("INSERT INTO `studentsborrow`.`$studentid` (bookid, borrowtime, status) VALUES ('$bookid', '$time', 'Borrowing')");
+
+$re = $conn->query("INSERT INTO $targetDB (borrowtime, name, class, bookname, category, regisnum, deadline) VALUES ('$currentTime', '$studentname', '$studentclass', '$bookname', '$bookcategory', '$bookregisnum' , '$deadline')");
 
 if($re == true){
     $res = new Response();
