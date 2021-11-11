@@ -3,8 +3,8 @@
 require "_main.php";
 
 
-$studentid = $_GET["sid"];
-$bookid = $_GET["bid"];
+$studentid = $_POST["sid"];
+$bookid = $_POST["bid"];
 
 if (!isset($studentid) || !isset($bookid)){
     $res = new Response();

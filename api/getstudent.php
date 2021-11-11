@@ -3,7 +3,7 @@
 require "_main.php";
 
 
-$studentid = $_GET["sid"];
+$studentid = $_POST["sid"];
 
 if (!isset($studentid)){
     $res = new Response();
@@ -22,7 +22,9 @@ if($re->num_rows>0){
     $row = $re->fetch_assoc();
     $res = new Response();
     $res->code = 0;
-    $res->content = $row["name"];
+    $res->content = "Success";
+    $res->name = $row["name"];
+    $res->class = $row["class"];
     die(json_encode($res));
 }else{
     $res = new Response();
@@ -42,5 +44,7 @@ if($re->num_rows>0){
 class Response{
     public $code;
     public $content;
+    public $name;
+    public $class;
 }
 ?>

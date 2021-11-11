@@ -4,7 +4,7 @@ require "_main.php";
 
 
 
-$id = $_GET["id"];
+$id = $_POST["bid"];
 
 if (!isset($id)){
     $res = new Response();
