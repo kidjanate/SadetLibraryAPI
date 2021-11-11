@@ -25,8 +25,8 @@ if($re->num_rows>0){
     $book = new book();
     $book->id = $row["id"];
     $book->name = $row["name"];
-    $book->getbooktime = $row["getbooktime"];
-    $book->regisNumber = $row["regisNumber"];
+    $book->getbooktime = $row["datetime"];
+    $book->regisNumber = $row["regisnum"];
     $book->price = $row["price"];
 
     $res->book = $book;
