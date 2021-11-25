@@ -47,6 +47,7 @@ if ($re->num_rows==0){
 $row = $re->fetch_assoc();
 $studentname = $row["name"];
 $studentclass = $row["class"];
+$studentnumber = $row["number"];
 
 
 if($conn->query("SHOW TABLE LIKE $targetDB")){
@@ -54,7 +55,7 @@ if($conn->query("SHOW TABLE LIKE $targetDB")){
 }
 
 
-$re = $conn->query("INSERT INTO $targetDB (borrowtime, name, class, bookname, category, regisnum, deadline) VALUES ('$currentTime', '$studentname', '$studentclass', '$bookname', '$bookcategory', '$bookregisnum' , '$deadline')");
+$re = $conn->query("INSERT INTO $targetDB (borrowtime, name, class, number, bookname, category, regisnum, deadline) VALUES ('$currentTime', '$studentname', '$studentclass', '$studentnumber', '$bookname', '$bookcategory', '$bookregisnum' , '$deadline')");
 
 if($re == true){
     $res = new Response();
